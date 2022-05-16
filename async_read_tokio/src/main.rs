@@ -25,7 +25,7 @@ async fn read_feeds(feeds: Vec<u32>) -> Vec<u32> {
 }
 
 async fn read_feed(feed: &u32) -> u32 {
-    sleep(Duration::from_millis(500)).await;
+    sleep(Duration::from_millis(200)).await;
 
     feed * 2
 }
