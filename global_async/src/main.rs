@@ -1,20 +1,31 @@
-use pretty_env_logger;
-use std::cell::RefCell;
-use std::collections::HashMap;
+use futures::stream::futures_unordered::FuturesUnordered;
+use futures::stream::StreamExt;
 use std::error::Error;
-use std::rc::Rc;
-use tokio;
+use std::time::{Duration, Instant};
+use tokio::time::sleep;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    pretty_env_logger::init();
-
-    let args = BlockchainNodeArgs::parse();
-
-    // Get key "hello"
-    let result = client.get("hello").await?;
-
-    println!("got value from the server; result={:?}", result);
+    let start = Instant::now();
+    let feeds = (0..10).collect::<Vec<_>>();
+    let res = read_feeds(feeds).await;
+    dbg!(res);
+    dbg!(start.elapsed());
 
     Ok(())
+}
+
+async fn read_feeds(feeds: Vec<u32>) -> Vec<u32> {
+    feeds
+        .iter()
+        .map(read_feed)
+        .collect::<FuturesUnordered<_>>()
+        .collect::<Vec<_>>()
+        .await
+}
+
+async fn read_feed(feed: &u32) -> u32 {
+    sleep(Duration::from_millis(500)).await;
+
+    feed * 2
 }
