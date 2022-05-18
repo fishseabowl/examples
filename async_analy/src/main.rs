@@ -1,7 +1,9 @@
 use futures::future::join_all;
 use log::info;
 use pretty_env_logger;
-use std::thread::sleep;
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex, RwLock};
+use std::thread::{self, sleep};
 use std::time::Duration;
 use tokio::task;
 
@@ -14,17 +16,26 @@ fn slowwly(delay_sec: u64) -> reqwest::Url {
 }
 
 // Now we want to both fetch some data and do some CPU intensive analysis on it
-async fn get_and_analyze(n: usize) -> Result<(u64, u64)> {
+async fn get_and_analyze(n: u8, data: Arc<RwLock<HashMap<u8, u8>>>) -> Result<(u64, u64)> {
     let response: reqwest::Response = reqwest::get(slowwly(1)).await?;
     info!("Dataset {}", n);
 
     // we get the body of the request
     let txt = response.text().await?;
 
+    let mut map = data.write().expect("RwLock poisoned");
+
+    // We use HashMap::entry to handle the case where another thread
+    // inserted the same key while where were unlocked.
+
+    map.entry(n).or_insert_with(|| n * 2 + 1);
+    // Let the loop start us over to try again
+
     // We send our analysis work to a thread where there is no runtime running
     // so we don't block the runtime by analyzing the data
     let res = task::spawn_blocking(move || analyze(&txt)).await?;
     info!("Processed {}", n);
+
     Ok(res)
 }
 
@@ -47,9 +58,21 @@ async fn main() -> Result<()> {
     // This is new. We can collect futures in a collection. Nice to know!
     let mut futures = vec![];
 
+    let mut map = Arc::new(RwLock::new(HashMap::new()));
+
+    let mut mymap = map.write().expect("RwLock poisoned");
+    mymap.insert(1, 15);
+    drop(mymap);
     info!("Start process!!");
     for i in 1..=10 {
-        let fut = task::spawn(get_and_analyze(i));
+        let fut = task::spawn(move || {
+            async {
+                let data = Arc::clone(&map);
+
+                get_and_analyze(i, data)
+            }
+            .await;
+        });
         futures.push(fut);
     }
 
