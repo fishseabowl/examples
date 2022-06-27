@@ -14,10 +14,11 @@
     5. Blockchain module broadcast event *add_block*
 
 3. query_block method
-4. 
-5. get_authorized_node_list method
+
+4. get_authorized_node_list method
 
 5. add_block event
-Add_block_listener
+
+6. Add_block_listener
 
 
