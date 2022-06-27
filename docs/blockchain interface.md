@@ -3,7 +3,7 @@
     2. The blockchain module receives this call, builds a block and communicates with other authorized nodes to reach a consensus and commits the block
     3. The blockchain module broadcasts the event *add_block* 
       
-2. add_authorization_node method
+2. add_authorized_node method
     1. Pyrsia Cli Command
       ````
       pyrsia add_authorized_node -PeerID -PubKey
