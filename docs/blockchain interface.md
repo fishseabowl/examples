@@ -1,5 +1,5 @@
 1. add_transparency_log method
-    1. The transparency module calls the event *add_transparency_log* method in the blockchain module
+    1. The transparency module calls the *add_transparency_log* method in the blockchain module
     2. The blockchain module receives this call, builds a block and communicates with other authorized nodes to reach a consensus and commits the block
     3. The blockchain module broadcasts the event *add_block* 
       
