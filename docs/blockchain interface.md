@@ -11,8 +11,8 @@
     2. The authorized module receives the cli command add_authorized_node
     3. The authorized module verifies the new authorized node information and adds the Signature with its own Privkey to create the payload, and calls the *add_authorized_node* method in the blockchain module
     4. The blockchain module receives the call, builds the block and communicates with other authorized nodes, reaches a consensus and commits the block
-        4.1 consensus failed....
-    6. Blockchain module broadcast event *add_block*
+        1. consensus failed....
+    5. Blockchain module broadcast event *add_block*
 
 3. query_block method
 
