@@ -7,6 +7,22 @@ fn main() {
     println!("a: {}, b: {}", test1.a(), test1.b());
     std::mem::swap(&mut test1, &mut test2);
     println!("a: {}, b: {}", test2.a(), test2.b());
+
+    let squared: Vec<usize> = (1..10).map(|x| x * x).collect();
+    println!("{:?}", squared);
+
+    let squared = (1..10).fold(1, |total, next| total * next);
+    println!("{:?}", squared);
+
+    let squared: Vec<usize> = (1..10).filter(|x| *x > 5).collect();
+    println!("{:?}", squared);
+
+    let squared = (1..)
+        .filter(|x| *x > 5)
+        .take(5)
+        .map(|x| x * x)
+        .fold(1, |sum: u64, next| sum + next);
+    println!("{:?}", squared);
 }
 
 #[derive(Debug)]
