@@ -14,7 +14,8 @@ async fn main() {
         .incoming()
         .for_each_concurrent(/* limit */ None, |tcpstream| async move {
             let tcpstream = tcpstream.unwrap();
-            handle_connection(tcpstream).await;
+            //handle_connection(tcpstream).await;
+            spawn(handle_connection(stream));   // handle_connection is both Send and non-blocking, it's safe to use with async_std::task::spawn
         })
         .await;
 }
