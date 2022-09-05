@@ -1,9 +1,23 @@
 use std::fs;
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
 use std::time::Duration;
 use async_std::task;
+
+use async_std::net::TcpListener;
+use async_std::net::TcpStream;
+use async_std::prelude::*;
+use futures::stream::StreamExt;
+
+#[async_std::main]
+async fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
+    listener
+        .incoming()
+        .for_each_concurrent(/* limit */ None, |tcpstream| async move {
+            let tcpstream = tcpstream.unwrap();
+            handle_connection(tcpstream).await;
+        })
+        .await;
+}
 
 /* fn main() {
     // Listen for incoming TCP connections on localhost port 7878
@@ -17,7 +31,7 @@ use async_std::task;
     }
 } */
 
-#[async_std::main]
+/* #[async_std::main]
 async fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     for stream in listener.incoming() {
@@ -25,7 +39,7 @@ async fn main() {
         // Warning: This is not concurrent!
         handle_connection(stream).await;
     }
-}
+} */
 
 /* fn handle_connection(mut stream: TcpStream) {
     // Read the first 1024 bytes of data from the stream
@@ -55,7 +69,7 @@ async fn main() {
 
 async fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
-    stream.read(&mut buffer).unwrap();
+    stream.read(&mut buffer).await.unwrap();
 
     let get = b"GET / HTTP/1.1\r\n";
     let sleep = b"GET /sleep HTTP/1.1\r\n";
@@ -71,6 +85,6 @@ async fn handle_connection(mut stream: TcpStream) {
     let contents = fs::read_to_string(filename).unwrap();
 
     let response = format!("{status_line}{contents}");
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+    stream.write(response.as_bytes()).await.unwrap();
+    stream.flush().await.unwrap();
 }
