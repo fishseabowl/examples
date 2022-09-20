@@ -20,6 +20,18 @@ fn main() {
     let b = Cmd::single;
     let c = Cmd::double2;
 
+    let x = "\u{80}";
+
+    for b in x.bytes() {
+        println!("uuu {:X}", b);
+    }
+
+    let x = b"\x80";
+
+    for b in x {
+        println!("xxx {:X}", b);
+    }
+
     println!(
         "{:?}, {:?},{:?}",
         size_of_val(&a),

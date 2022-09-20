@@ -1,6 +1,6 @@
+use async_std::task;
 use std::fs;
 use std::time::Duration;
-use async_std::task;
 
 use async_std::net::TcpListener;
 use async_std::net::TcpStream;
@@ -15,7 +15,7 @@ async fn main() {
         .for_each_concurrent(/* limit */ None, |tcpstream| async move {
             let tcpstream = tcpstream.unwrap();
             //handle_connection(tcpstream).await;
-            spawn(handle_connection(stream));   // handle_connection is both Send and non-blocking, it's safe to use with async_std::task::spawn
+            task::spawn(handle_connection(tcpstream)); // handle_connection is both Send and non-blocking, it's safe to use with async_std::task::spawn
         })
         .await;
 }
@@ -65,8 +65,6 @@ async fn main() {
     stream.flush().unwrap();
 }
  */
-
-
 
 async fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
