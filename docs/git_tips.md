@@ -1,0 +1,51 @@
+```
+$ git reset --mixed 9877269d5aaed27a2e486efa048946e77b410a57 //parent commit node
+$ git add .
+$ git commit -m "change author email"
+$ git push -f
+$ git remote -v
+$ git fetch upstream
+$ git merge upstream/main
+$   git merge --abort
+$   git cherry-pick b5ef21ff7b9eaa9ea991dbd1818f6d9f8c513b58
+$   git merge upstream/main
+$   git merge --continue
+$   git merge --continue
+$   git status
+$   git push
+```
+
+```
+ 1068  git pull
+ 1069  git status
+ 1070  git remote -v
+ 1071  git fetch upstream
+ 1072  git reset --hard upstream/main
+ 1073  git push -f
+ 1074  git fetch
+```
+
+## Create a new branch blockchain in github UI
+ ```
+ 1075  git checkout -b blockchain
+ 1076  git checkout -b blockchain --track origin/blockchain
+ 1077  git push --set-upstream origin
+ 1078  git push --set-upstream origin blockchain
+ ```
+
+## Clear unused commit    //(change pick to s(squash abbv))
+```
+1084  git fetch upstream
+ 1085  git checkout main
+ 1086  git pull
+ 1087  git log
+ 1088  git checkout blockchain
+ 1089  git rebase -i --onto main 77e59fd5703e1601a7c3f9b435a941b7f1972001
+ 1090  git push -f
+```
+
+## Rebase branch to another branch
+```
+git checkout <current_branch>
+git merge <another_branch>
+```
