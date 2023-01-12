@@ -33,4 +33,13 @@ struct Args {
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init_timed();
+
+    let Args {
+        id,
+        ports,
+        n_data,
+        n_starting,
+        stalled,
+        crash,
+    } = Args::parse();
 }

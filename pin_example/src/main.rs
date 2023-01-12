@@ -22,8 +22,8 @@ impl<'data> SimpleRef<'data> {
         }
     }
 
-    fn init(mut self: Pin<SimpleRef<'data>>) {
-        let this: &mut SimpleRef = unsafe { Pin::get_mut(&mut self) };
+    fn init(mut self: Pin<&mut Self>) {
+        let this: &mut SimpleRef = unsafe { Pin::get_mut(self) };
         let a = FooRef {
             ref_var: &this.foo.var,
             other: 12,
