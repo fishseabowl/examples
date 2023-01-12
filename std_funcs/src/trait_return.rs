@@ -27,3 +27,48 @@ fn trait_return_exp() {
     assert_eq!(Some(5), v3.next());
     println!("all done");
 }
+
+// Returns a function that adds `y` to its input
+fn make_adder_function(y: i32) -> impl Fn(i32) -> i32 {
+    let closure = move |x: i32| x + y;
+    closure
+}
+
+fn adder_function_example() {
+    let plus_one = make_adder_function(1);
+    assert_eq!(plus_one(2), 3);
+}
+
+fn double_positives<'a>(numbers: &'a Vec<i32>) -> impl Iterator<Item = i32> + 'a {
+    numbers.iter().filter(|x| x > &&0).map(|x| x * 2)
+}
+
+trait Person {
+    fn name(&self) -> String;
+}
+
+// Person is a supertrait of Student.
+// Implementing Student requires you to also impl Person.
+trait Student: Person {
+    fn university(&self) -> String;
+}
+
+trait Programmer {
+    fn fav_language(&self) -> String;
+}
+
+// CompSciStudent (computer science student) is a subtrait of both Programmer
+// and Student. Implementing CompSciStudent requires you to impl both supertraits.
+trait CompSciStudent: Programmer + Student {
+    fn git_username(&self) -> String;
+}
+
+fn comp_sci_student_greeting(student: &dyn CompSciStudent) -> String {
+    format!(
+        "My name is {} and I attend {}. My favorite language is {}. My Git username is {}",
+        student.name(),
+        student.university(),
+        student.fav_language(),
+        student.git_username()
+    )
+}
