@@ -7,6 +7,7 @@ Get Ubuntu iso image from https://ubuntu.com/download/alternative-downloads
 Prepare VirtualBox with downloaded image.
 Base memory: 8GB
 CPU: 4 CPU
+DISK: 500G
 Settings -> Advanced -> Shared Clipboard -> set to Bidirectional**
 root permission: On a fresh ubuntu virtual box image vboxuser doesn’t have root permission. Following next steps gives sudo permission to the user. Open terminal and enter su -. Run following as root user.
 
